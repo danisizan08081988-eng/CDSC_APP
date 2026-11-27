@@ -3,29 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CDSC Management System v4</title>
+<title>CDSC Management System v5</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
     * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, sans-serif; }
     body { background:#f0f9ff; font-size:13px; color:#0f172a; min-height:100vh; padding-bottom:30px; }
-    
+
     /* LOGIN */
     #loginScreen { position:fixed; inset:0; background:#0284c7; display:flex; align-items:center; justify-content:center; z-index:9999; }
     .login-box { background:#fff; padding:30px; border-radius:12px; width:100%; max-width:350px; box-shadow:0 10px 25px rgba(0,0,0,.2); text-align:center; }
     .login-box h2 { color:#075985; margin-bottom:20px; }
     .login-box input { width:100%; padding:10px; margin-bottom:15px; border:1.5px solid #cbd5e1; border-radius:6px; }
-    
+
     /* HEADER & TABS */
     .form-header { background:linear-gradient(135deg,#075985 0%,#0284c7 100%); color:#fff; padding:16px; text-align:center; position:relative; }
     .form-header h1 { font-size:18px; font-weight:900; letter-spacing:.5px; }
     .user-info { position:absolute; right:16px; top:16px; font-size:11px; background:rgba(255,255,255,.2); padding:6px 12px; border-radius:20px; cursor:pointer; }
-    
+
     .sheet-tabs { background:#fff; display:flex; border-bottom:2px solid #e2e8f0; position:sticky; top:0; z-index:50; overflow-x:auto; }
     .sheet-tab { padding:14px 20px; border:none; background:transparent; font-size:13px; font-weight:800; color:#64748b; cursor:pointer; white-space:nowrap; border-bottom:3px solid transparent; }
     .sheet-tab.active { color:#075985; border-bottom-color:#0284c7; background:#f0f9ff; }
     .view { display:none; } .view.active { display:block; }
-    
+
     /* UI ELEMENTS */
     .toolbar { background:#fff; padding:12px 16px; display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; border-bottom:1px solid #e2e8f0; }
     .btn { padding:8px 14px; border:none; border-radius:8px; font-size:12px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:.15s; }
@@ -34,20 +34,20 @@
     .btn-outline { background:#fff; color:#334155; border:1.5px solid #cbd5e1; }
     .btn-wa { background:#25D366; color:#fff; }
     .form-control { padding:8px 12px; border:1.5px solid #cbd5e1; border-radius:6px; font-size:12px; font-weight:600; }
-    
+
     .container { margin:16px; background:#fff; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,.05); overflow:hidden; border:1px solid #cbd5e1; }
     table { width:100%; border-collapse:collapse; font-size:12px; }
     th { background:#f8fafc; padding:12px 10px; text-align:left; font-weight:800; color:#475569; border-bottom:2px solid #cbd5e1; white-space:nowrap; }
     td { padding:10px; border-bottom:1px solid #e2e8f0; vertical-align:middle; }
     .badge { padding:3px 8px; border-radius:12px; font-weight:700; font-size:10px; }
     .badge-green { background:#dcfce7; color:#166534; } .badge-yellow { background:#fef3c7; color:#92400e; } .badge-blue { background:#dbeafe; color:#1e40af; } .badge-red { background:#fee2e2; color:#991b1b; }
-    
+
     /* DASHBOARD CARDS */
     .dash-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin:16px; }
     .dash-card { background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,.05); border-left:5px solid #0284c7; }
     .dash-card h3 { font-size:11px; color:#64748b; text-transform:uppercase; margin-bottom:8px; }
     .dash-card .value { font-size:28px; font-weight:900; color:#0f172a; }
-    
+
     /* PRESENSI MATRIX */
     .matrix-table th,.matrix-table td{text-align:center;border:1px solid #e2e8f0;padding:6px 4px;font-size:11px;}
     .matrix-table th:first-child,.matrix-table td:first-child{text-align:left;position:sticky;left:0;background:#f8fafc;font-weight:700;}
@@ -63,10 +63,10 @@
     .form-group { margin-bottom:12px; }
     .form-group label { display:block; font-weight:700; margin-bottom:4px; color:#475569; }
     .form-group input, .form-group select, .form-group textarea { width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px; }
-    
+
     .toast { position:fixed; bottom:20px; right:20px; background:#0f172a; color:#fff; padding:12px 20px; border-radius:8px; z-index:300; opacity:0; transition:.3s; font-weight:700; }
     .toast.show { opacity:1; }
-    
+
     .invoice-wrapper { display: flex; justify-content: center; padding: 20px; overflow-x: auto; }
     .a4-paper { background: #fff; width: 210mm; min-height: 297mm; padding: 15mm; box-shadow: 0 10px 25px rgba(0,0,0,.1); border: 1px solid #cbd5e1; color: #000; }
     .inv-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
@@ -74,12 +74,12 @@
     .inv-header-blue { background: #00b0f0; color: #fff; text-align: center; font-weight: bold; }
     .inv-header-gray { background: #d9d9d9; font-weight: bold; text-align: center; }
     .inv-yellow { background: #ffff00; font-weight: bold; }
-    
+
     @media print {
         .no-print { display:none !important; }
         .container { margin:0; border:none; box-shadow:none; }
         .invoice-wrapper { padding: 0; }
-        .a4-paper { box-shadow: none; border: none; padding: 0; width: 100%; }
+        .a4-paper { box-shadow: none; border: none; padding: 0; width: 100%; min-height:auto; }
         @page { size: A4; margin: 10mm; }
     }
 </style>
@@ -90,8 +90,8 @@
 <div id="loginScreen">
     <div class="login-box">
         <h2>CDSC Admin Login</h2>
-        <input type="text" id="loginUser" placeholder="Username (admin)" value="admin">
-        <input type="password" id="loginPass" placeholder="Password (admin123)" value="admin123">
+        <input type="text" id="loginUser" placeholder="Username" autocomplete="username">
+        <input type="password" id="loginPass" placeholder="Password" autocomplete="current-password">
         <button class="btn btn-primary" style="width:100%;" onclick="doLogin()">Masuk Sistem</button>
         <p style="margin-top:15px; font-size:10px; color:#666;">*Hanya admin yang bisa mengedit data</p>
     </div>
@@ -105,12 +105,12 @@
 
 <!-- TABS -->
 <div class="sheet-tabs no-print">
-    <button class="sheet-tab active" onclick="switchTab('dashboard', this)">📊 DASHBOARD</button>
-    <button class="sheet-tab" onclick="switchTab('atlet', this)">👶 DATA ATLET</button>
-    <button class="sheet-tab" onclick="switchTab('presensi', this)">📅 REKAP PRESENSI</button>
-    <button class="sheet-tab" onclick="switchTab('progres', this)">📝 INPUT PROGRES</button>
-    <button class="sheet-tab" onclick="switchTab('event', this)">🏆 EVENT & LOMBA</button>
-    <button class="sheet-tab" onclick="switchTab('laporan', this)">📄 INVOICE & RAPORT</button>
+    <button class="sheet-tab active" data-tab="dashboard" onclick="switchTab('dashboard', this)">📊 DASHBOARD</button>
+    <button class="sheet-tab" data-tab="atlet" onclick="switchTab('atlet', this)">👶 DATA ATLET</button>
+    <button class="sheet-tab" data-tab="presensi" onclick="switchTab('presensi', this)">📅 REKAP PRESENSI</button>
+    <button class="sheet-tab" data-tab="progres" onclick="switchTab('progres', this)">📝 INPUT PROGRES</button>
+    <button class="sheet-tab" data-tab="event" onclick="switchTab('event', this)">🏆 EVENT & LOMBA</button>
+    <button class="sheet-tab" data-tab="laporan" onclick="switchTab('laporan', this)">📄 INVOICE & RAPORT</button>
 </div>
 
 <!-- 1. DASHBOARD -->
@@ -126,6 +126,12 @@
             <thead><tr><th>Level Kelas</th><th>Jumlah Atlet</th><th>Rata-rata Kehadiran</th><th>Target Kurikulum Tuntas</th></tr></thead>
             <tbody id="tabelStatLevel"></tbody>
         </table>
+        <div style="margin-top:20px; display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn btn-outline" onclick="backupJSON()">💾 Backup Data (JSON)</button>
+            <button class="btn btn-outline" onclick="document.getElementById('restoreFile').click()">📥 Restore Data</button>
+            <input type="file" id="restoreFile" style="display:none;" accept=".json" onchange="restoreJSON(event)">
+            <button class="btn btn-danger" onclick="resetData()">🗑️ Reset ke Default</button>
+        </div>
     </div>
 </div>
 
@@ -171,7 +177,8 @@
                 <option value="">Semua Kelas</option>
             </select>
         </div>
-        <div>
+        <div style="display:flex; gap:8px;">
+            <button class="btn btn-outline" onclick="toggleModePresensi()" id="btnModePresensi">Mode: Edit</button>
             <button class="btn btn-primary" onclick="window.print()">🖨️ Print Matrix</button>
         </div>
     </div>
@@ -197,7 +204,7 @@
 <div class="view" id="view-event">
     <div class="toolbar">
         <div style="display:flex; gap:8px;">
-            <select class="form-control" id="eventAtlet" style="min-width:200px;"></select>
+            <select class="form-control" id="eventAtlet" style="min-width:200px;" onchange="loadEvent()"></select>
         </div>
         <div>
             <button class="btn btn-success" onclick="tambahEvent()">➕ Tambah Catatan Event</button>
@@ -216,11 +223,7 @@
     <div class="toolbar no-print">
         <div style="display:flex; gap:8px;">
             <select class="form-control" id="pilihAtletLaporan" onchange="generateLaporan()"></select>
-            <select class="form-control" id="pilihBulanLaporan" onchange="generateLaporan()">
-                <option value="2026-09">September 2026</option>
-                <option value="2026-10">Oktober 2026</option>
-                <option value="2026-11">November 2026</option>
-            </select>
+            <select class="form-control" id="pilihBulanLaporan" onchange="generateLaporan()"></select>
         </div>
         <div>
             <button class="btn btn-wa" onclick="generatePesanWA()">📱 Copy Pesan WA</button>
@@ -246,60 +249,137 @@
 
 <script>
 /* ============================================================
-   STATE & DATABASE
+   CONSTANTS & UTILS
    ============================================================ */
-let DB = {};
-const DB_KEY = 'cdsc_v4_db';
-let isAdmin = false;
+const DB_KEY = 'cdsc_v5_db';
+// SHA-256 dari "admin123" — ganti dengan hash password baru Anda.
+// Cara generate: buka console, jalankan:
+//   crypto.subtle.digest('SHA-256', new TextEncoder().encode('PASSWORD_BARU'))
+//     .then(b => console.log([...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')))
+const ADMIN_USER = 'admin';
+const ADMIN_HASH = '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9'; // admin123
 
+let DB = {};
+let isAdmin = false;
+let currentAtletId = null;
+let currentTab = 'dashboard';
+let modeEditPresensi = false;
+let importCounter = 0;
+
+/* Escape HTML untuk cegah XSS */
+function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* SHA-256 helper */
+async function sha256(text) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return [...new Uint8Array(buf)].map(x => x.toString(16).padStart(2,'0')).join('');
+}
+
+/* Toast */
+function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.className = 'toast show';
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.className = 'toast', 3000);
+}
+
+/* Modal */
+function showModal() { document.getElementById('modalOverlay').classList.add('show'); }
+function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
+
+/* ============================================================
+   DATABASE
+   ============================================================ */
 function defaultDB() {
     return {
         masterKurikulum: [
             { grup: "A. KESELAMATAN DAN PENGUASAAN AIR", items: ["Adaptasi air dan kontrol napas", "Mengapung tengkurap-telentang dan kembali berdiri", "Meluncur, berputar, dan kembali ke tempat aman"] },
-            { grup: "B. GERAKAN KAKI DAN GAYA BEBAS", items: ["Kaki gaya bebas 5 m", "Kaki gaya bebas 10-25 m", "Gaya bebas 5 m", "Gaya bebas 10-25 m"] }
+            { grup: "B. GERAKAN KAKI DAN GAYA BEBAS", items: ["Kaki gaya bebas 5 m", "Kaki gaya bebas 10-25 m", "Gaya bebas 5 m", "Gaya bebas 10-25 m"] },
+            { grup: "C. GAYA PUNGGUNG", items: ["Kaki gaya punggung 5 m", "Kaki gaya punggung 10-25 m", "Gaya punggung 10-25 m"] },
+            { grup: "D. GAYA DADA & KUPU-KUPU", items: ["Kaki gaya dada 10 m", "Gaya dada 10-25 m", "Kaki kupu-kupu 10 m"] }
         ],
         pelatih: ["Ka Reza", "Ka Rehan", "Ka Ikhsan"],
-        atlet: [
-            { 
-                id: '001', nama: 'SINTIA NUR DEWI', panggilan: 'SINTIA', level: 'Pemula Berkembang', 
-                paket: 8, tarif: 260000, tgl_lahir: '2015-05-12', ortu: 'Bpk Ahmad', wa: '08123456789',
-                sekolah: 'SDN 1 Pandeglang', alamat: 'Cadasari', penyakit: 'Alergi Dingin',
-                progres: [], presensi: [], event: [], catatan_pelatih: ''
-            }
-        ]
+        atlet: [{
+            id: '001', nama: 'SINTIA NUR DEWI', panggilan: 'SINTIA', level: 'Pemula Berkembang',
+            paket: 8, tarif: 260000, tgl_lahir: '2015-05-12', ortu: 'Bpk Ahmad', wa: '08123456789',
+            sekolah: 'SDN 1 Pandeglang', alamat: 'Cadasari', penyakit: 'Alergi Dingin',
+            progres: [], presensi: [], event: [], catatan_pelatih: ''
+        }]
     };
 }
 
 function loadDB() {
-    const raw = localStorage.getItem(DB_KEY);
-    DB = raw ? JSON.parse(raw) : defaultDB();
+    try {
+        const raw = localStorage.getItem(DB_KEY);
+        DB = raw ? JSON.parse(raw) : defaultDB();
+    } catch(e) {
+        console.error('DB corrupt, reset:', e);
+        DB = defaultDB();
+    }
+    // Normalisasi: pastikan field array ada
+    DB.atlet.forEach(a => {
+        a.progres = a.progres || [];
+        a.presensi = a.presensi || [];
+        a.event = a.event || [];
+        a.tarif = a.tarif || 0;
+        a.paket = a.paket || 8;
+        a.catatan_pelatih = a.catatan_pelatih || '';
+    });
 }
 function saveDB() { localStorage.setItem(DB_KEY, JSON.stringify(DB)); }
 
 /* ============================================================
-   AUTH & INIT
+   AUTH
    ============================================================ */
 window.onload = function() {
     loadDB();
-    document.getElementById('rekapBulan').value = new Date().toISOString().slice(0,7);
-    document.getElementById('pilihBulanLaporan').value = new Date().toISOString().slice(0,7);
+    initBulanOptions();
 };
 
-function doLogin() {
-    const u = document.getElementById('loginUser').value;
+function initBulanOptions() {
+    // Isi dropdown bulan untuk 12 bulan terakhir + 3 bulan ke depan
+    const now = new Date();
+    const opts = [];
+    for (let i = -12; i <= 3; i++) {
+        const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+        const val = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+        const label = d.toLocaleDateString('id-ID', { month:'long', year:'numeric' });
+        opts.push(`<option value="${val}">${label}</option>`);
+    }
+    document.getElementById('pilihBulanLaporan').innerHTML = opts.join('');
+    const nowVal = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+    document.getElementById('pilihBulanLaporan').value = nowVal;
+    document.getElementById('rekapBulan').value = nowVal;
+}
+
+async function doLogin() {
+    const u = document.getElementById('loginUser').value.trim();
     const p = document.getElementById('loginPass').value;
-    if(u === 'admin' && p === 'admin123') {
-        isAdmin = true;
-        document.getElementById('loginScreen').style.display = 'none';
-        initApp();
-    } else {
-        alert('Username atau Password salah!');
+    if (!u || !p) { alert('Isi username & password!'); return; }
+    try {
+        const hash = await sha256(p);
+        if (u === ADMIN_USER && hash === ADMIN_HASH) {
+            isAdmin = true;
+            document.getElementById('loginScreen').style.display = 'none';
+            initApp();
+        } else {
+            alert('Username atau Password salah!');
+        }
+    } catch(e) {
+        // Fallback kalau crypto.subtle tidak tersedia (mis. file:// di browser lama)
+        if (u === ADMIN_USER && p === 'admin123') {
+            isAdmin = true;
+            document.getElementById('loginScreen').style.display = 'none';
+            initApp();
+        } else {
+            alert('Username atau Password salah!');
+        }
     }
 }
 
-function logout() {
-    location.reload();
-}
+function logout() { location.reload(); }
 
 function initApp() {
     refreshDropdowns();
@@ -308,40 +388,68 @@ function initApp() {
     loadRekapPresensi();
 }
 
+/* ============================================================
+   TAB NAVIGATION
+   ============================================================ */
 function switchTab(tabId, btn) {
+    currentTab = tabId;
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.querySelectorAll('.sheet-tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('view-' + tabId).classList.add('active');
-    btn.classList.add('active');
-    
-    if(tabId === 'progres') loadFormProgres();
-    if(tabId === 'laporan') generateLaporan();
-    if(tabId === 'event') loadEvent();
-    if(tabId === 'dashboard') loadDashboard();
-    if(tabId === 'presensi') loadRekapPresensi();
+    const view = document.getElementById('view-' + tabId);
+    if (view) view.classList.add('active');
+    // Sinkronkan tombol tab berdasarkan data-tab, bukan `this`
+    document.querySelectorAll('.sheet-tab').forEach(t => {
+        if (t.dataset.tab === tabId) t.classList.add('active');
+    });
+
+    if (tabId === 'progres') loadFormProgres();
+    if (tabId === 'laporan') generateLaporan();
+    if (tabId === 'event') loadEvent();
+    if (tabId === 'dashboard') loadDashboard();
+    if (tabId === 'presensi') loadRekapPresensi();
 }
 
-function refreshDropdowns() {
-    const optAtlet = DB.atlet.map(a => `<option value="${a.id}">${a.nama}</option>`).join('');
-    document.getElementById('pilihAtletProgres').innerHTML = optAtlet;
-    document.getElementById('pilihAtletLaporan').innerHTML = optAtlet;
-    document.getElementById('eventAtlet').innerHTML = optAtlet;
-    
-    const optPelatih = DB.pelatih.map(p => `<option value="${p}">${p}</option>`).join('');
-    document.getElementById('pilihPelatih').innerHTML = optPelatih;
-    
-    const optKelas = DB.atlet.map(a => a.level).filter((v,i,self) => self.indexOf(v) === i);
-    document.getElementById('rekapKelas').innerHTML = '<option value="">Semua Kelas</option>' + optKelas.map(k => `<option value="${k}">${k}</option>`).join('');
+function activateTab(tabId) {
+    const btn = document.querySelector(`.sheet-tab[data-tab="${tabId}"]`);
+    switchTab(tabId, btn);
 }
 
 /* ============================================================
-   DASHBOARD STATISTIK
+   DROPDOWN
+   ============================================================ */
+function refreshDropdowns() {
+    const optAtlet = DB.atlet.length
+        ? DB.atlet.map(a => `<option value="${esc(a.id)}">${esc(a.nama)}</option>`).join('')
+        : '<option value="">-- Belum ada atlet --</option>';
+
+    ['pilihAtletProgres','pilihAtletLaporan','eventAtlet'].forEach(id => {
+        const el = document.getElementById(id);
+        const prev = el.value;
+        el.innerHTML = optAtlet;
+        if (prev && DB.atlet.some(a => a.id === prev)) el.value = prev;
+    });
+
+    const optPelatih = DB.pelatih.length
+        ? DB.pelatih.map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join('')
+        : '<option value="">-- Belum ada pelatih --</option>';
+    document.getElementById('pilihPelatih').innerHTML = optPelatih;
+
+    // Simpan pilihan kelas sebelum rebuild
+    const rekapKelas = document.getElementById('rekapKelas');
+    const prevKelas = rekapKelas.value;
+    const optKelas = [...new Set(DB.atlet.map(a => a.level))];
+    rekapKelas.innerHTML = '<option value="">Semua Kelas</option>' +
+        optKelas.map(k => `<option value="${esc(k)}">${esc(k)}</option>`).join('');
+    if (prevKelas && optKelas.includes(prevKelas)) rekapKelas.value = prevKelas;
+}
+
+/* ============================================================
+   DASHBOARD
    ============================================================ */
 function loadDashboard() {
     document.getElementById('statAtlet').textContent = DB.atlet.length;
     document.getElementById('statPelatih').textContent = DB.pelatih.length;
-    
-    // Hitung statistik per level
+
     const levels = [...new Set(DB.atlet.map(a => a.level))];
     let html = '';
     let totalHadir = 0, totalSesi = 0;
@@ -351,70 +459,75 @@ function loadDashboard() {
         let hadirLv = 0, sesiLv = 0, targetTuntas = 0;
 
         atletLv.forEach(a => {
-            sesiLv += a.presensi.length;
-            hadirLv += a.presensi.length; // di versi demo asumsi semua yg diinput = hadir
+            // Sesi terjadwal = paket (kuota pertemuan per bulan)
+            sesiLv += a.paket;
+            // Hadir = jumlah presensi H/I (S/A tidak dihitung hadir)
+            hadirLv += a.presensi.filter(p => {
+                const st = typeof p === 'string' ? 'H' : (p.status || 'H');
+                return st === 'H' || st === 'I';
+            }).length;
             targetTuntas += a.progres.filter(p => p.status === 'TUNTAS').length;
         });
 
         totalHadir += hadirLv;
         totalSesi += sesiLv;
-        
-        const pct = sesiLv > 0 ? Math.round((hadirLv / (sesiLv || 1)) * 100) : 0;
-        
+        const pct = sesiLv > 0 ? Math.min(100, Math.round((hadirLv / sesiLv) * 100)) : 0;
+
         html += `<tr>
-            <td><b>${lv}</b></td>
+            <td><b>${esc(lv)}</b></td>
             <td>${atletLv.length} Atlet</td>
             <td><span class="badge badge-blue">${pct}%</span></td>
             <td>${targetTuntas} Indikator Tuntas</td>
         </tr>`;
     });
-    
-    const globalPct = totalSesi > 0 ? Math.round((totalHadir / totalSesi) * 100) : 0;
+
+    const globalPct = totalSesi > 0 ? Math.min(100, Math.round((totalHadir / totalSesi) * 100)) : 0;
     document.getElementById('statHadir').textContent = globalPct + '%';
-    document.getElementById('tabelStatLevel').innerHTML = html;
+    document.getElementById('tabelStatLevel').innerHTML = html || '<tr><td colspan="4" style="text-align:center;">Belum ada data</td></tr>';
 }
 
 /* ============================================================
-   DATA ATLET (CRUD, FILTER, EXPORT/IMPORT)
+   DATA ATLET
    ============================================================ */
 function loadAtlet() {
     const q = document.getElementById('searchAtlet').value.toLowerCase();
     const fLevel = document.getElementById('filterLevel').value;
-    
-    let list = DB.atlet.filter(a => a.nama.toLowerCase().includes(q));
-    if(fLevel) list = list.filter(a => a.level === fLevel);
-    
+
+    let list = DB.atlet.filter(a => (a.nama || '').toLowerCase().includes(q));
+    if (fLevel) list = list.filter(a => a.level === fLevel);
+
     document.getElementById('tabelAtlet').innerHTML = list.map(a => `
         <tr>
-            <td>${a.id}</td>
-            <td><b>${a.nama}</b><br><small style="color:#666;">${a.alamat || '-'}</small></td>
-            <td>${a.panggilan}</td>
-            <td><span class="badge badge-green">${a.paket}x</span></td>
-            <td><span class="badge badge-blue">${a.level}</span></td>
-            <td>${a.tgl_lahir}</td>
-            <td>${a.ortu}<br><small>${a.wa}</small></td>
-            <td>${a.sekolah || '-'}</td>
+            <td>${esc(a.id)}</td>
+            <td><b>${esc(a.nama)}</b><br><small style="color:#666;">${esc(a.alamat || '-')}</small></td>
+            <td>${esc(a.panggilan)}</td>
+            <td><span class="badge badge-green">${esc(a.paket)}x</span></td>
+            <td><span class="badge badge-blue">${esc(a.level)}</span></td>
+            <td>${esc(a.tgl_lahir)}</td>
+            <td>${esc(a.ortu)}<br><small>${esc(a.wa)}</small></td>
+            <td>${esc(a.sekolah || '-')}</td>
             <td>
-                <button class="btn btn-outline" style="padding:4px 8px;" onclick="openModalAtlet('${a.id}')">Edit</button>
-                <button class="btn btn-danger" style="padding:4px 8px;" onclick="hapusAtlet('${a.id}')">Hapus</button>
+                <button class="btn btn-outline" style="padding:4px 8px;" onclick="openModalAtlet('${esc(a.id)}')">Edit</button>
+                <button class="btn btn-danger" style="padding:4px 8px;" onclick="hapusAtlet('${esc(a.id)}')">Hapus</button>
             </td>
         </tr>
-    `).join('');
+    `).join('') || '<tr><td colspan="9" style="text-align:center; padding:20px;">Belum ada atlet</td></tr>';
 }
 
 function openModalAtlet(id) {
-    const a = id ? DB.atlet.find(x => x.id === id) : { 
-        id: '', nama: '', panggilan: '', level: 'Dasar', tgl_lahir: '', ortu: '', wa: '', 
-        alamat: '', sekolah: '', penyakit: '-', paket: 8, tarif: 260000 
+    const a = id ? DB.atlet.find(x => x.id === id) : {
+        id: '', nama: '', panggilan: '', level: 'Dasar', tgl_lahir: '', ortu: '', wa: '',
+        alamat: '', sekolah: '', penyakit: '-', paket: 8, tarif: 260000
     };
-    
+    if (id && !a) return;
+
     document.getElementById('modalTitle').textContent = id ? 'Edit Atlet' : 'Tambah Atlet';
     document.getElementById('modalBox').style.maxWidth = '700px';
     document.getElementById('modalBody').innerHTML = `
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <div class="form-group"><label>Nama Lengkap</label><input id="m_nama" value="${a.nama}"></div>
-            <div class="form-group"><label>Panggilan</label><input id="m_panggilan" value="${a.panggilan}"></div>
-            <div class="form-group"><label>Tgl Lahir</label><input type="date" id="m_tgl" value="${a.tgl_lahir}"></div>
+            <div class="form-group"><label>Nama Lengkap</label><input id="m_nama" value="${esc(a.nama)}"></div>
+            <div class="form-group"><label>Panggilan</label><input id="m_panggilan" value="${esc(a.panggilan)}"></div>
+            <div class="form-group"><label>Tgl Lahir</label><input type="date" id="m_tgl" value="${esc(a.tgl_lahir)}"></div>
             <div class="form-group"><label>Level</label>
                 <select id="m_level">
                     <option value="Dasar" ${a.level==='Dasar'?'selected':''}>Dasar</option>
@@ -423,11 +536,11 @@ function openModalAtlet(id) {
                     <option value="Lanjutan / Prestasi" ${a.level==='Lanjutan / Prestasi'?'selected':''}>Lanjutan / Prestasi</option>
                 </select>
             </div>
-            <div class="form-group"><label>Nama Ortu</label><input id="m_ortu" value="${a.ortu}"></div>
-            <div class="form-group"><label>No WA</label><input id="m_wa" value="${a.wa}"></div>
-            <div class="form-group"><label>Alamat</label><input id="m_alamat" value="${a.alamat}"></div>
-            <div class="form-group"><label>Sekolah</label><input id="m_sekolah" value="${a.sekolah}"></div>
-            <div class="form-group"><label>Riwayat Penyakit</label><input id="m_penyakit" value="${a.penyakit}"></div>
+            <div class="form-group"><label>Nama Ortu</label><input id="m_ortu" value="${esc(a.ortu)}"></div>
+            <div class="form-group"><label>No WA</label><input id="m_wa" value="${esc(a.wa)}"></div>
+            <div class="form-group"><label>Alamat</label><input id="m_alamat" value="${esc(a.alamat)}"></div>
+            <div class="form-group"><label>Sekolah</label><input id="m_sekolah" value="${esc(a.sekolah)}"></div>
+            <div class="form-group"><label>Riwayat Penyakit</label><input id="m_penyakit" value="${esc(a.penyakit)}"></div>
             <div class="form-group"><label>Paket</label>
                 <select id="m_paket" onchange="updateTarif()">
                     <option value="4" ${a.paket==4?'selected':''}>4x</option>
@@ -436,43 +549,52 @@ function openModalAtlet(id) {
                 </select>
             </div>
         </div>
-        <input type="hidden" id="m_tarif" value="${a.tarif}">
+        <input type="hidden" id="m_tarif" value="${a.tarif || 260000}">
     `;
-    
+
     document.getElementById('modalSaveBtn').onclick = function() {
+        const nama = document.getElementById('m_nama').value.trim();
+        if (!nama) { alert('Nama wajib diisi!'); return; }
+
         const data = {
-            id: id || String(Date.now()).slice(-3),
-            nama: document.getElementById('m_nama').value,
-            panggilan: document.getElementById('m_panggilan').value,
+            id: id || String(Date.now()).slice(-6),
+            nama,
+            panggilan: document.getElementById('m_panggilan').value.trim(),
             tgl_lahir: document.getElementById('m_tgl').value,
             level: document.getElementById('m_level').value,
-            ortu: document.getElementById('m_ortu').value,
-            wa: document.getElementById('m_wa').value,
-            alamat: document.getElementById('m_alamat').value,
-            sekolah: document.getElementById('m_sekolah').value,
-            penyakit: document.getElementById('m_penyakit').value,
-            paket: parseInt(document.getElementById('m_paket').value),
-            tarif: parseInt(document.getElementById('m_tarif').value),
-            progres: a.progres || [], presensi: a.presensi || [], event: a.event || [], catatan_pelatih: a.catatan_pelatih || ''
+            ortu: document.getElementById('m_ortu').value.trim(),
+            wa: document.getElementById('m_wa').value.trim(),
+            alamat: document.getElementById('m_alamat').value.trim(),
+            sekolah: document.getElementById('m_sekolah').value.trim(),
+            penyakit: document.getElementById('m_penyakit').value.trim(),
+            paket: parseInt(document.getElementById('m_paket').value) || 8,
+            tarif: parseInt(document.getElementById('m_tarif').value) || 0,
+            progres: a.progres || [], presensi: a.presensi || [], event: a.event || [],
+            catatan_pelatih: a.catatan_pelatih || ''
         };
-        
-        if (id) { DB.atlet[DB.atlet.findIndex(x => x.id === id)] = data; } 
-        else { DB.atlet.push(data); }
-        
-        saveDB(); closeModal(); loadAtlet(); refreshDropdowns(); loadDashboard(); toast('Data disimpan');
+
+        if (id) {
+            const idx = DB.atlet.findIndex(x => x.id === id);
+            DB.atlet[idx] = data;
+        } else {
+            DB.atlet.push(data);
+        }
+        saveDB(); closeModal(); loadAtlet(); refreshDropdowns(); loadDashboard();
+        toast(id ? 'Data diperbarui' : 'Atlet ditambahkan');
     };
     showModal();
 }
 
 function hapusAtlet(id) {
-    if(!confirm('Yakin hapus atlet ini?')) return;
+    if (!confirm('Yakin hapus atlet ini? Data presensi & progres akan hilang.')) return;
     DB.atlet = DB.atlet.filter(x => x.id !== id);
     saveDB(); loadAtlet(); refreshDropdowns(); loadDashboard();
+    toast('Atlet dihapus');
 }
 
 function updateTarif() {
-    const p = document.getElementById('m_paket').value;
-    document.getElementById('m_tarif').value = { 4: 150000, 8: 260000, 12: 350000 }[p];
+    const p = parseInt(document.getElementById('m_paket').value);
+    document.getElementById('m_tarif').value = { 4: 150000, 8: 260000, 12: 350000 }[p] || 0;
 }
 
 function openModalPelatih() {
@@ -482,38 +604,69 @@ function openModalPelatih() {
         <div class="form-group"><label>Nama Pelatih</label><input id="m_pelatih_nama"></div>
     `;
     document.getElementById('modalSaveBtn').onclick = function() {
-        const nama = document.getElementById('m_pelatih_nama').value;
-        if(nama) { DB.pelatih.push(nama); saveDB(); refreshDropdowns(); closeModal(); toast('Pelatih ditambahkan'); }
+        const nama = document.getElementById('m_pelatih_nama').value.trim();
+        if (nama) {
+            DB.pelatih.push(nama); saveDB(); refreshDropdowns(); closeModal();
+            toast('Pelatih ditambahkan');
+        }
     };
     showModal();
 }
 
-/* EXPORT / IMPORT EXCEL (SEDERHANA) */
+/* EXPORT / IMPORT EXCEL */
 function exportMasterExcel() {
+    if (!DB.atlet.length) { toast('Belum ada data'); return; }
     const wb = XLSX.utils.book_new();
     const data = DB.atlet.map(a => ({
-        ID: a.id, Nama: a.nama, Panggilan: a.panggilan, Paket: a.paket, Level: a.level,
+        ID: a.id, Nama: a.nama, Panggilan: a.panggilan, Paket: a.paket, Tarif: a.tarif, Level: a.level,
         TglLahir: a.tgl_lahir, Ortu: a.ortu, WA: a.wa, Sekolah: a.sekolah, Alamat: a.alamat
     }));
     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), "Atlet");
-    XLSX.writeFile(wb, `Data_Atlet_CDSC.xlsx`);
+    XLSX.writeFile(wb, `Data_Atlet_CDSC_${new Date().toISOString().slice(0,10)}.xlsx`);
+    toast('File Excel diunduh');
 }
 
 function importMasterExcel(e) {
     const file = e.target.files[0];
-    if(!file) return;
+    if (!file) return;
     const reader = new FileReader();
     reader.onload = function(ev) {
-        const wb = XLSX.read(ev.target.result, {type:'array'});
-        const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-        rows.forEach(r => {
-            DB.atlet.push({
-                id: String(r.ID || Date.now()).slice(-3), nama: r.Nama, panggilan: r.Panggilan,
-                level: r.Level, paket: r.Paket, tgl_lahir: r.TglLahir, ortu: r.Ortu, wa: r.WA,
-                sekolah: r.Sekolah, alamat: r.Alamat, progres: [], presensi: [], event: []
+        try {
+            const wb = XLSX.read(ev.target.result, { type: 'array' });
+            const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+            if (!rows.length) { toast('File kosong'); e.target.value=''; return; }
+
+            importCounter = Date.now() % 1000000;
+            let added = 0, skipped = 0;
+            rows.forEach(r => {
+                if (!r.Nama) { skipped++; return; }
+                // Cegah duplikat nama
+                if (DB.atlet.some(a => (a.nama||'').toLowerCase() === String(r.Nama).toLowerCase())) {
+                    skipped++; return;
+                }
+                DB.atlet.push({
+                    id: String(importCounter++).padStart(6, '0'),
+                    nama: String(r.Nama).trim(),
+                    panggilan: String(r.Panggilan || r.Nama).trim(),
+                    level: r.Level || 'Dasar',
+                    paket: parseInt(r.Paket) || 8,
+                    tarif: parseInt(r.Tarif) || 260000,
+                    tgl_lahir: r.TglLahir || '',
+                    ortu: r.Ortu || '',
+                    wa: String(r.WA || ''),
+                    sekolah: r.Sekolah || '',
+                    alamat: r.Alamat || '',
+                    penyakit: '-',
+                    progres: [], presensi: [], event: [], catatan_pelatih: ''
+                });
+                added++;
             });
-        });
-        saveDB(); loadAtlet(); refreshDropdowns(); toast('Import berhasil!');
+            saveDB(); loadAtlet(); refreshDropdowns(); loadDashboard();
+            toast(`${added} atlet diimport${skipped ? `, ${skipped} dilewati` : ''}`);
+        } catch(err) {
+            alert('Gagal import: ' + err.message);
+        }
+        e.target.value = '';
     };
     reader.readAsArrayBuffer(file);
 }
@@ -521,97 +674,154 @@ function importMasterExcel(e) {
 /* ============================================================
    REKAP PRESENSI (MATRIX)
    ============================================================ */
+function toggleModePresensi() {
+    modeEditPresensi = !modeEditPresensi;
+    document.getElementById('btnModePresensi').textContent = modeEditPresensi ? 'Mode: Lihat' : 'Mode: Edit';
+    loadRekapPresensi();
+}
+
 function loadRekapPresensi() {
     const bln = document.getElementById('rekapBulan').value;
     const kelas = document.getElementById('rekapKelas').value;
-    if(!bln) return;
+    if (!bln) return;
 
-    const [y,m] = bln.split('-').map(Number);
-    const days = Array.from({length: new Date(y, m, 0).getDate()}, (_,i) => i+1);
-    
+    const [y, m] = bln.split('-').map(Number);
+    const days = Array.from({ length: new Date(y, m, 0).getDate() }, (_, i) => i + 1);
+
     let src = DB.atlet;
-    if(kelas) src = src.filter(a => a.level === kelas);
+    if (kelas) src = src.filter(a => a.level === kelas);
+
+    if (!src.length) {
+        document.getElementById('matrixContainer').innerHTML = '<p style="padding:30px; text-align:center;">Belum ada data atlet</p>';
+        return;
+    }
 
     let html = `<table class="matrix-table"><thead><tr><th>Nama Atlet</th><th>Kelas</th>`;
-    days.forEach(d => { html += `<th>${d}</th>`; });
+    days.forEach(d => html += `<th>${d}</th>`);
     html += `<th>Hadir</th><th>%</th></tr></thead><tbody>`;
 
     src.forEach(a => {
+        // Normalisasi presensi ke map { tgl: status }
+        const map = {};
+        (a.presensi || []).forEach(p => {
+            if (typeof p === 'string') map[p] = 'H';
+            else if (p && p.tgl) map[p.tgl] = p.status || 'H';
+        });
+
         let hadir = 0;
-        html += `<tr><td>${a.nama}</td><td>${a.level}</td>`;
+        html += `<tr><td>${esc(a.nama)}</td><td>${esc(a.level)}</td>`;
         days.forEach(d => {
             const tgl = `${bln}-${String(d).padStart(2,'0')}`;
-            const isHadir = a.presensi.includes(tgl);
-            if(isHadir) hadir++;
-            html += `<td class="${isHadir?'h':''}">${isHadir?'H':''}</td>`;
+            const st = map[tgl] || '';
+            if (st === 'H') hadir++;
+            const cls = st ? st.toLowerCase() : '';
+            const clickAttr = modeEditPresensi
+                ? `onclick="cyclePresensi('${esc(a.id)}','${tgl}')" style="cursor:pointer;" title="Klik untuk ubah status"`
+                : '';
+            html += `<td class="${cls}" ${clickAttr}>${st}</td>`;
         });
-        const pct = Math.round((hadir / a.paket) * 100);
+        const pct = a.paket > 0 ? Math.min(100, Math.round((hadir / a.paket) * 100)) : 0;
         html += `<td style="font-weight:bold;">${hadir}</td><td>${pct}%</td></tr>`;
     });
-    
     html += `</tbody></table>`;
     document.getElementById('matrixContainer').innerHTML = html;
 }
 
-/* ============================================================
-   INPUT PROGRES (DINAMIS KURIKULUM)
-   ============================================================ */
-let currentAtletId = null;
+function cyclePresensi(atletId, tgl) {
+    const a = DB.atlet.find(x => x.id === atletId);
+    if (!a) return;
+    const order = ['', 'H', 'I', 'S', 'A'];
+    let curr = '';
+    const idx = (a.presensi || []).findIndex(p => (typeof p === 'string' ? p : p.tgl) === tgl);
+    if (idx >= 0) {
+        curr = typeof a.presensi[idx] === 'string' ? 'H' : (a.presensi[idx].status || 'H');
+    }
+    const next = order[(order.indexOf(curr) + 1) % order.length];
+    // Hapus dulu
+    a.presensi = (a.presensi || []).filter(p => (typeof p === 'string' ? p : p.tgl) !== tgl);
+    if (next) a.presensi.push({ tgl, status: next });
+    saveDB();
+    loadRekapPresensi();
+}
 
+/* ============================================================
+   INPUT PROGRES
+   ============================================================ */
 function loadFormProgres() {
-    currentAtletId = document.getElementById('pilihAtletProgres').value;
+    const sel = document.getElementById('pilihAtletProgres');
+    currentAtletId = sel.value;
     const a = DB.atlet.find(x => x.id === currentAtletId);
-    if(!a) return;
-    
+    if (!a) {
+        document.getElementById('formProgresContainer').innerHTML =
+            '<p style="text-align:center; padding:40px;">Pilih atlet terlebih dahulu</p>';
+        return;
+    }
+
     let kurHtml = '';
     DB.masterKurikulum.forEach((grup, gIdx) => {
         kurHtml += `<div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px; margin-bottom:5px;">
-            <h5 style="color:#075985; margin:0;">${grup.grup}</h5>
+            <h5 style="color:#075985; margin:0;">${esc(grup.grup)}</h5>
             <button class="btn btn-outline" style="padding:2px 6px; font-size:10px;" onclick="tambahItemKurikulum(${gIdx})">+ Item</button>
         </div>`;
-        
         grup.items.forEach((item, iIdx) => {
-            // Cari apakah sudah ada di progres atlet
             const existing = a.progres.find(p => p.namaItem === item);
             const isChecked = existing ? 'checked' : '';
-            
             kurHtml += `
                 <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px; font-size:12px;">
-                    <input type="checkbox" class="chk-kurikulum" data-grup="${gIdx}" data-item="${item}" ${isChecked}>
-                    <label>${item}</label>
-                    ${isAdmin ? `<button class="btn btn-danger" style="padding:0 5px; margin-left:auto;" onclick="hapusItemKurikulum(${gIdx}, ${iIdx})">x</button>` : ''}
+                    <input type="checkbox" class="chk-kurikulum" data-grup="${gIdx}" data-item="${esc(item)}" ${isChecked}>
+                    <label>${esc(item)}</label>
+                    <button class="btn btn-danger" style="padding:0 5px; margin-left:auto;" onclick="hapusItemKurikulum(${gIdx}, ${iIdx})">x</button>
                 </div>
             `;
         });
     });
 
-    let presHtml = a.presensi.sort().map(t => `<span class="badge badge-green" style="cursor:pointer;" onclick="hapusHadir('${t}')" title="Hapus">${t.slice(8,10)} ✕</span> `).join('');
+    // Render badge presensi
+    const presBadges = (a.presensi || []).slice().sort((x, y) => {
+        const tx = typeof x === 'string' ? x : x.tgl;
+        const ty = typeof y === 'string' ? y : y.tgl;
+        return tx.localeCompare(ty);
+    }).map(p => {
+        const tgl = typeof p === 'string' ? p : p.tgl;
+        const st = typeof p === 'string' ? 'H' : (p.status || 'H');
+        const cls = st === 'H' ? 'badge-green' : st === 'I' ? 'badge-blue' : st === 'S' ? 'badge-yellow' : 'badge-red';
+        return `<span class="badge ${cls}" style="cursor:pointer; margin:2px;" onclick="hapusHadir('${tgl}')" title="Hapus">${tgl.slice(8,10)} ${st} ✕</span>`;
+    }).join('');
+
+    const sisa = Math.max(0, a.paket - (a.presensi || []).filter(p => {
+        const st = typeof p === 'string' ? 'H' : (p.status || 'H');
+        return st === 'H';
+    }).length);
 
     document.getElementById('formProgresContainer').innerHTML = `
         <div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:15px;">
-            <div><h3>${a.nama}</h3><p>${a.level} | Paket: ${a.paket}</p></div>
-            <div style="text-align:right;"><h3 style="color:#059669;">${a.paket - a.presensi.length} Sisa Kuota</h3></div>
+            <div><h3>${esc(a.nama)}</h3><p>${esc(a.level)} | Paket: ${esc(a.paket)}</p></div>
+            <div style="text-align:right;"><h3 style="color:#059669;">${sisa} Sisa Kuota</h3></div>
         </div>
-        
         <div style="display:flex; gap:20px; flex-wrap:wrap;">
-            <div style="flex:1;">
-                <div class="form-group"><label>Tambah Kehadiran</label>
+            <div style="flex:1; min-width:250px;">
+                <div class="form-group"><label>Tambah Presensi</label>
                     <input type="date" id="in_tgl" value="${new Date().toISOString().slice(0,10)}">
-                    <button class="btn btn-primary" style="width:100%; margin-top:5px;" onclick="tambahHadir()">+ Tambah</button>
+                    <select id="in_status" style="margin-top:5px;">
+                        <option value="H">Hadir</option>
+                        <option value="I">Izin</option>
+                        <option value="S">Sakit</option>
+                        <option value="A">Alpha</option>
+                    </select>
+                    <button class="btn btn-primary" style="width:100%; margin-top:5px;" onclick="tambahHadir()">+ Tambah Presensi</button>
                 </div>
                 <div style="background:#f0fdf4; padding:10px; border-radius:8px;">
-                    <p style="font-size:11px; font-weight:bold; margin-bottom:5px;">Klik untuk hapus/undo:</p>
-                    ${presHtml || 'Belum ada'}
+                    <p style="font-size:11px; font-weight:bold; margin-bottom:5px;">Klik badge untuk hapus:</p>
+                    ${presBadges || 'Belum ada presensi'}
                 </div>
             </div>
-            
-            <div style="flex:2;">
+            <div style="flex:2; min-width:300px;">
                 <div style="border:1px solid #cbd5e1; padding:15px; border-radius:8px; max-height:300px; overflow-y:auto;">
                     ${kurHtml}
                 </div>
                 <div class="form-group" style="margin-top:10px;">
                     <label>Catatan Pelatih</label>
-                    <textarea id="in_catatan" rows="2">${a.catatan_pelatih}</textarea>
+                    <textarea id="in_catatan" rows="2">${esc(a.catatan_pelatih)}</textarea>
                 </div>
             </div>
         </div>
@@ -620,46 +830,64 @@ function loadFormProgres() {
 
 function tambahHadir() {
     const tgl = document.getElementById('in_tgl').value;
+    const status = document.getElementById('in_status').value;
     const a = DB.atlet.find(x => x.id === currentAtletId);
-    if(!a.presensi.includes(tgl)) { a.presensi.push(tgl); saveDB(); loadFormProgres(); }
+    if (!a || !tgl) return;
+    // Hapus tanggal yg sama lalu tambah
+    a.presensi = (a.presensi || []).filter(p => (typeof p === 'string' ? p : p.tgl) !== tgl);
+    a.presensi.push({ tgl, status });
+    saveDB(); loadFormProgres(); toast('Presensi ditambahkan');
 }
+
 function hapusHadir(tgl) {
-    if(!confirm(`Hapus hadir tgl ${tgl}?`)) return;
+    if (!confirm(`Hapus presensi tgl ${tgl}?`)) return;
     const a = DB.atlet.find(x => x.id === currentAtletId);
-    a.presensi = a.presensi.filter(t => t !== tgl);
+    a.presensi = (a.presensi || []).filter(p => (typeof p === 'string' ? p : p.tgl) !== tgl);
     saveDB(); loadFormProgres();
 }
 
-function simpanProgres(isSilent = false) {
+function simpanProgres(isSilent) {
     const a = DB.atlet.find(x => x.id === currentAtletId);
-    const catatan = document.getElementById('in_catatan').value;
-    
-    // Hapus semua progres lama, timpa dengan yang baru dicentang
-    a.progres = [];
+    if (!a) return;
+    const catatanEl = document.getElementById('in_catatan');
+    const catatan = catatanEl ? catatanEl.value : (a.catatan_pelatih || '');
+
+    // Merge: pertahankan progres lama yang masih dicentang, tambahkan yg baru
+    const lamaMap = new Map((a.progres || []).map(p => [p.namaItem, p]));
+    const baru = [];
     document.querySelectorAll('.chk-kurikulum').forEach(cb => {
-        if(cb.checked) {
-            a.progres.push({ namaItem: cb.dataset.item, status: 'TUNTAS', tgl: new Date().toISOString().slice(0,10) });
+        if (cb.checked) {
+            const item = cb.dataset.item;
+            baru.push(lamaMap.get(item) || {
+                namaItem: item, status: 'TUNTAS',
+                tgl: new Date().toISOString().slice(0,10)
+            });
         }
     });
+    a.progres = baru;
     a.catatan_pelatih = catatan;
     saveDB();
-    if(!isSilent) { loadFormProgres(); toast('Progres disimpan!'); }
+    if (!isSilent) { loadFormProgres(); toast('Progres disimpan!'); }
 }
 
 function tambahItemKurikulum(gIdx) {
     const item = prompt('Nama target kurikulum baru:');
-    if(item) { DB.masterKurikulum[gIdx].items.push(item); saveDB(); loadFormProgres(); }
+    if (item && item.trim()) {
+        DB.masterKurikulum[gIdx].items.push(item.trim());
+        saveDB(); loadFormProgres();
+    }
 }
+
 function hapusItemKurikulum(gIdx, iIdx) {
-    if(confirm('Hapus item ini?')) { DB.masterKurikulum[gIdx].items.splice(iIdx, 1); saveDB(); loadFormProgres(); }
+    if (!confirm('Hapus item ini dari kurikulum? (akan hilang untuk semua atlet)')) return;
+    DB.masterKurikulum[gIdx].items.splice(iIdx, 1);
+    saveDB(); loadFormProgres();
 }
 
 function switchTabKeLaporan() {
     simpanProgres(true);
     document.getElementById('pilihAtletLaporan').value = currentAtletId;
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.getElementById('view-laporan').classList.add('active');
-    generateLaporan();
+    activateTab('laporan');
 }
 
 /* ============================================================
@@ -668,11 +896,14 @@ function switchTabKeLaporan() {
 function loadEvent() {
     const id = document.getElementById('eventAtlet').value;
     const a = DB.atlet.find(x => x.id === id);
-    if(!a) return;
-    
+    if (!a) {
+        document.getElementById('tabelEvent').innerHTML = '<tr><td colspan="6" style="text-align:center;">Pilih atlet</td></tr>';
+        return;
+    }
     document.getElementById('tabelEvent').innerHTML = (a.event || []).map((e, i) => `
         <tr>
-            <td>${e.tgl}</td><td>${e.nama}</td><td>${e.gaya}</td><td><b>${e.waktu}</b></td><td>${e.medali || '-'}</td>
+            <td>${esc(e.tgl)}</td><td>${esc(e.nama)}</td><td>${esc(e.gaya)}</td>
+            <td><b>${esc(e.waktu)}</b></td><td>${esc(e.medali || '-')}</td>
             <td><button class="btn btn-danger" onclick="hapusEvent(${i})">Hapus</button></td>
         </tr>
     `).join('') || '<tr><td colspan="6" style="text-align:center;">Belum ada data event.</td></tr>';
@@ -681,24 +912,37 @@ function loadEvent() {
 function tambahEvent() {
     const id = document.getElementById('eventAtlet').value;
     const a = DB.atlet.find(x => x.id === id);
-    if(!a) return;
-    
-    const tgl = prompt('Tanggal Event (YYYY-MM-DD):', new Date().toISOString().slice(0,10));
-    const nama = prompt('Nama Event / Lomba:');
-    const gaya = prompt('Gaya / Jarak (cth: Bebas 50m):');
-    const waktu = prompt('Catatan Waktu (cth: 00:35:12):');
-    const medali = prompt('Medali / Peringkat (opsional):');
-    
-    if(nama) {
+    if (!a) return;
+
+    document.getElementById('modalTitle').textContent = 'Tambah Catatan Event';
+    document.getElementById('modalBox').style.maxWidth = '500px';
+    document.getElementById('modalBody').innerHTML = `
+        <div class="form-group"><label>Tanggal</label><input type="date" id="e_tgl" value="${new Date().toISOString().slice(0,10)}"></div>
+        <div class="form-group"><label>Nama Event</label><input id="e_nama"></div>
+        <div class="form-group"><label>Gaya / Jarak</label><input id="e_gaya" placeholder="cth: Bebas 50m"></div>
+        <div class="form-group"><label>Catatan Waktu</label><input id="e_waktu" placeholder="cth: 00:35:12"></div>
+        <div class="form-group"><label>Medali / Peringkat (opsional)</label><input id="e_medali"></div>
+    `;
+    document.getElementById('modalSaveBtn').onclick = function() {
+        const nama = document.getElementById('e_nama').value.trim();
+        if (!nama) { alert('Nama event wajib diisi'); return; }
         a.event = a.event || [];
-        a.event.push({ tgl, nama, gaya, waktu, medali });
-        saveDB(); loadEvent();
-    }
+        a.event.push({
+            tgl: document.getElementById('e_tgl').value,
+            nama,
+            gaya: document.getElementById('e_gaya').value.trim(),
+            waktu: document.getElementById('e_waktu').value.trim(),
+            medali: document.getElementById('e_medali').value.trim()
+        });
+        saveDB(); closeModal(); loadEvent(); toast('Event ditambahkan');
+    };
+    showModal();
 }
 
 function hapusEvent(idx) {
     const id = document.getElementById('eventAtlet').value;
     const a = DB.atlet.find(x => x.id === id);
+    if (!a || !confirm('Hapus event ini?')) return;
     a.event.splice(idx, 1); saveDB(); loadEvent();
 }
 
@@ -709,14 +953,18 @@ function generateLaporan() {
     const id = document.getElementById('pilihAtletLaporan').value;
     const bln = document.getElementById('pilihBulanLaporan').value;
     const a = DB.atlet.find(x => x.id === id);
-    if (!a) return;
+    if (!a) {
+        document.getElementById('invoiceArea').innerHTML = '<p style="padding:40px; text-align:center;">Pilih atlet</p>';
+        return;
+    }
 
-    const presBln = a.presensi.filter(t => t.startsWith(bln));
-    const sisa = a.paket - presBln.length;
-    const tglHadir = presBln.map(t => parseInt(t.slice(8,10))).join(', ');
-    const bulanTeks = new Date(bln + '-01').toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
-
-    const pelatih = document.getElementById('pilihPelatih').value;
+    const pres = (a.presensi || []).map(p => typeof p === 'string' ? { tgl: p, status: 'H' } : p);
+    const presBln = pres.filter(p => p.tgl.startsWith(bln) && p.status === 'H');
+    const sisa = Math.max(0, (a.paket || 0) - presBln.length);
+    const tglHadir = presBln.map(p => parseInt(p.tgl.slice(8,10))).join(', ');
+    const bulanTeks = new Date(bln + '-01').toLocaleDateString('id-ID', { month:'long', year:'numeric' });
+    const pelatih = document.getElementById('pilihPelatih').value || '-';
+    const tarif = Number(a.tarif) || 0;
 
     document.getElementById('invoiceArea').innerHTML = `
         <div style="display:flex; justify-content:space-between; border-bottom:2px solid #000; padding-bottom:10px; margin-bottom:15px;">
@@ -726,57 +974,53 @@ function generateLaporan() {
             </div>
             <div style="text-align:right;">
                 <h2 style="font-size:20px; font-weight:900;">PERIODE LATIHAN</h2>
-                <h2 style="font-size:24px; font-weight:900;">${bulanTeks}</h2>
+                <h2 style="font-size:24px; font-weight:900;">${esc(bulanTeks)}</h2>
                 <div style="display:flex; justify-content:space-between; font-size:11px; margin-top:10px; border-bottom:1px solid #000; padding-bottom:2px;">
-                    <span>Nomor Invoice :</span><span>INV/${bln}/${a.id}</span>
+                    <span>Nomor Invoice :</span><span>INV/${esc(bln)}/${esc(a.id)}</span>
                 </div>
             </div>
         </div>
-
         <div style="display:flex; gap:15px; margin-bottom:15px;">
             <div style="flex:2;">
                 <table class="inv-table">
                     <tr><th colspan="4" class="inv-header-blue">PROFILE ATLET</th></tr>
-                    <tr><td style="font-weight:bold; background:#f0f0f0;">ID</td><td>${a.id}</td><td style="font-weight:bold; background:#f0f0f0;">PANGGILAN</td><td class="inv-yellow">${a.panggilan}</td></tr>
-                    <tr><td style="font-weight:bold; background:#f0f0f0;">NAMA</td><td class="inv-yellow">${a.nama}</td><td style="font-weight:bold; background:#f0f0f0;">LEVEL</td><td class="inv-yellow">${a.level}</td></tr>
+                    <tr><td style="font-weight:bold; background:#f0f0f0;">ID</td><td>${esc(a.id)}</td><td style="font-weight:bold; background:#f0f0f0;">PANGGILAN</td><td class="inv-yellow">${esc(a.panggilan)}</td></tr>
+                    <tr><td style="font-weight:bold; background:#f0f0f0;">NAMA</td><td class="inv-yellow">${esc(a.nama)}</td><td style="font-weight:bold; background:#f0f0f0;">LEVEL</td><td class="inv-yellow">${esc(a.level)}</td></tr>
                 </table>
             </div>
         </div>
-
         <div style="display:flex; gap:15px; margin-bottom:15px;">
             <div style="flex:2;">
                 <table class="inv-table">
                     <tr><th colspan="2" class="inv-header-blue">PERKEMBANGAN LATIHAN</th></tr>
                     <tr class="inv-header-gray"><td>INDIKATOR (TARGET)</td><td>STATUS</td></tr>
-                    ${a.progres.slice(-5).map(p => `<tr><td>${p.namaItem}</td><td style="text-align:center; font-weight:bold;">${p.status}</td></tr>`).join('') || '<tr><td colspan="2" style="text-align:center;">Belum ada data</td></tr>'}
+                    ${a.progres.slice(-5).map(p => `<tr><td>${esc(p.namaItem)}</td><td style="text-align:center; font-weight:bold;">${esc(p.status)}</td></tr>`).join('') || '<tr><td colspan="2" style="text-align:center;">Belum ada data</td></tr>'}
                 </table>
             </div>
             <div style="flex:1;">
                 <table class="inv-table" style="height:100%;">
                     <tr><th colspan="2" class="inv-header-blue">CATATAN PELATIH</th></tr>
-                    <tr><td class="inv-yellow" style="height:70px; vertical-align:top;">${a.catatan_pelatih || '-'}</td></tr>
-                    <tr><td style="font-weight:bold; text-align:right;" colspan="2">COACH: <span class="inv-yellow" style="padding:2px 10px;">${pelatih}</span></td></tr>
+                    <tr><td class="inv-yellow" style="height:70px; vertical-align:top;">${esc(a.catatan_pelatih || '-')}</td></tr>
+                    <tr><td style="font-weight:bold; text-align:right;" colspan="2">COACH: <span class="inv-yellow" style="padding:2px 10px;">${esc(pelatih)}</span></td></tr>
                 </table>
             </div>
         </div>
-
         <div style="display:flex; gap:15px; margin-bottom:20px;">
             <div style="flex:1;">
                 <table class="inv-table">
                     <tr><th colspan="2" class="inv-header-blue">RINCIAN KEHADIRAN</th></tr>
                     <tr class="inv-header-gray"><td>TANGGAL HADIR</td><td>TOTAL SESI</td></tr>
-                    <tr><td style="text-align:center;">${tglHadir || '-'}</td><td style="text-align:center; font-weight:bold;">${presBln.length} Sesi</td></tr>
+                    <tr><td style="text-align:center;">${esc(tglHadir || '-')}</td><td style="text-align:center; font-weight:bold;">${presBln.length} Sesi</td></tr>
                 </table>
             </div>
             <div style="flex:1;">
                 <table class="inv-table">
                     <tr><th colspan="2" class="inv-header-blue">RINCIAN TAGIHAN</th></tr>
                     <tr class="inv-header-gray"><td>TOTAL TAGIHAN</td><td>SISA KUOTA</td></tr>
-                    <tr><td style="text-align:center; font-weight:bold; font-size:16px;">Rp${a.tarif.toLocaleString('id-ID')}</td><td style="text-align:center; font-weight:bold;">${sisa} Sesi</td></tr>
+                    <tr><td style="text-align:center; font-weight:bold; font-size:16px;">Rp${tarif.toLocaleString('id-ID')}</td><td style="text-align:center; font-weight:bold;">${sisa} Sesi</td></tr>
                 </table>
             </div>
         </div>
-        
         <div style="background:#00b0f0; color:#fff; text-align:center; padding:5px; font-weight:bold; font-size:11px; margin-top:20px;">
             - TERIMAKASIH ATAS KEPERCAYAANYA KEPADA CDSC -
         </div>
@@ -787,25 +1031,104 @@ function generatePesanWA() {
     const id = document.getElementById('pilihAtletLaporan').value;
     const bln = document.getElementById('pilihBulanLaporan').value;
     const a = DB.atlet.find(x => x.id === id);
-    if(!a) return;
-    
-    const sisa = a.paket - a.presensi.filter(t => t.startsWith(bln)).length;
-    const pesan = `Halo Ayah/Bunda *${a.ortu}*,\n\nBerikut laporan ananda *${a.nama}* periode *${bln}*:\n\n✅ *Sisa Kuota:* ${sisa} pertemuan\n📝 *Catatan:* ${a.catatan_pelatih || '-'}\n\nSilakan cek PDF terlampir. Terima kasih 🙏`;
-    
-    navigator.clipboard.writeText(pesan).then(() => toast('Pesan WA dicopy!'));
+    if (!a) return;
+
+    const presBln = (a.presensi || [])
+        .map(p => typeof p === 'string' ? { tgl: p, status: 'H' } : p)
+        .filter(p => p.tgl.startsWith(bln) && p.status === 'H');
+    const sisa = Math.max(0, (a.paket || 0) - presBln.length);
+    const bulanTeks = new Date(bln + '-01').toLocaleDateString('id-ID', { month:'long', year:'numeric' });
+    const pesan = `Halo Ayah/Bunda *${a.ortu || '-'}*,\n\nBerikut laporan ananda *${a.nama}* periode *${bulanTeks}*:\n\n✅ *Sisa Kuota:* ${sisa} pertemuan\n📝 *Catatan:* ${a.catatan_pelatih || '-'}\n\nTerima kasih 🙏`;
+
+    copyText(pesan);
+}
+
+function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text)
+            .then(() => toast('Pesan WA dicopy!'))
+            .catch(() => fallbackCopy(text));
+    } else {
+        fallbackCopy(text);
+    }
+}
+
+function fallbackCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try {
+        document.execCommand('copy');
+        toast('Pesan WA dicopy!');
+    } catch(e) {
+        alert('Gagal copy. Silakan copy manual:\n\n' + text);
+    }
+    document.body.removeChild(ta);
 }
 
 function downloadPDF() {
-    html2pdf().set({margin:0, filename:`Invoice_${document.getElementById('pilihAtletLaporan').value}.pdf`, html2canvas:{scale:2}})
-        .from(document.getElementById('invoiceArea')).save();
+    const id = document.getElementById('pilihAtletLaporan').value;
+    const bln = document.getElementById('pilihBulanLaporan').value;
+    const a = DB.atlet.find(x => x.id === id);
+    const fname = `Invoice_${a ? a.nama.replace(/\s+/g,'_') : 'atlet'}_${bln}.pdf`;
+    const el = document.getElementById('invoiceArea');
+
+    html2pdf().set({
+        margin: [10, 10, 10, 10],
+        filename: fname,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    }).from(el).save();
+    toast('PDF sedang dibuat...');
 }
 
 /* ============================================================
-   UTILS
+   BACKUP / RESTORE / RESET
    ============================================================ */
-function showModal() { document.getElementById('modalOverlay').classList.add('show'); }
-function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
-function toast(msg) { const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show'; setTimeout(()=>t.className='toast',3000); }
+function backupJSON() {
+    const blob = new Blob([JSON.stringify(DB, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `cdsc_backup_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('Backup diunduh');
+}
+
+function restoreJSON(ev) {
+    const file = ev.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            if (!data.atlet || !Array.isArray(data.atlet)) throw new Error('Format tidak valid');
+            if (!confirm('Restore akan menimpa data saat ini. Lanjutkan?')) { ev.target.value=''; return; }
+            DB = data;
+            DB.atlet.forEach(a => {
+                a.progres = a.progres || []; a.presensi = a.presensi || [];
+                a.event = a.event || []; a.tarif = a.tarif || 0;
+                a.paket = a.paket || 8; a.catatan_pelatih = a.catatan_pelatih || '';
+            });
+            saveDB(); refreshDropdowns(); loadAtlet(); loadDashboard(); loadRekapPresensi();
+            toast('Restore berhasil');
+        } catch(err) {
+            alert('File backup tidak valid: ' + err.message);
+        }
+        ev.target.value = '';
+    };
+    reader.readAsText(file);
+}
+
+function resetData() {
+    if (!confirm('Reset ke data default? SEMUA data atlet, presensi, dan progres akan hilang!')) return;
+    if (!confirm('Yakin? Tindakan ini tidak bisa dibatalkan.')) return;
+    DB = defaultDB(); saveDB();
+    refreshDropdowns(); loadAtlet(); loadDashboard(); loadRekapPresensi(); loadFormProgres();
+    toast('Data direset ke default');
+}
 </script>
 </body>
 </html>
